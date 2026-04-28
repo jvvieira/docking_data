@@ -1,0 +1,14 @@
+services:
+  rosetta:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    user: "0"
+    privileged: true
+    volumes:
+      - ./outputs:/outputs
+      - ./filtered_data:/filtered_data
+
+    command: ["python", "running_rosetta.py"]

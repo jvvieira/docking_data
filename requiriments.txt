@@ -1,0 +1,8 @@
+biopython==1.87
+numpy==2.4.4
+pandas==3.0.2
+pyrosetta==2026.3+releasequarterly.5e498f1409
+python-dateutil==2.9.0.post0
+scipy==1.17.1
+six==1.17.0
+spicy==0.16.0
