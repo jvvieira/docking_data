@@ -22,13 +22,7 @@ def get_ligands_from_pdb(pdb_file):
             protein_atoms.append(atom)
         elif(atom.parent.parent.get_id() == 'B'): # Example: only consider chain B as ligand
             ligand_atoms.append(atom)
-
-        if atom.parent.resname != 'HOH': # Example excluding water
-            if len(atom.parent.resname) > 3: # Simple heuristic for ligands/residues
-                ligand_atoms.append(atom)
-            else:
-                protein_atoms.append(atom)
-
+            
     # print(f"Protein atoms: {len(protein_atoms)}, Ligand atoms: {len(ligand_atoms)}")
 
     # 3. Find intersection (atoms within 5 Angstroms)
