@@ -57,11 +57,6 @@ print(f'Total number of cases (ISC + Delta Interface): {len(df_merged)}')
 df_merged = df_merged[df_merged['value'] < 0]
 print(f'Number of binding cases: {len(df_merged)}')
 
-## Normality test
-df_merged['value'] = df_merged['value'].astype(float)
-stat, p = stats.shapiro(df_merged['value'])
-print(f'Shapiro-Wilk test statistic: {stat}, p-value: {p}')
-
 
 percentile_value = df_merged['value'].quantile(percentile)
 print(f'{100 - int(percentile * 100)}% percentile value: {percentile_value}')
@@ -92,6 +87,8 @@ if os.path.exists('./filtered_data/'):
 ## Create a new folder for filtered data
 os.makedirs('./filtered_data/', exist_ok=True)
 
+df_output = pd.DataFrame(columns=['protein', 'ligand', 'model', 'pose', 'value', 'description'])
+
 ## Copy the pdb to a new folder
 for item in df_merged.itertuples():
     protein = item.protein
@@ -99,15 +96,29 @@ for item in df_merged.itertuples():
     model = item.model
     pose = item.pose
     description = item.description
+    new_row = {
+        'protein': protein,
+        'ligand': ligand,
+        'model': model,
+        'pose': pose,
+        'value': item.value,
+        'description': description
+    }
+
+    df_output = pd.concat([df_output, pd.DataFrame([new_row])], ignore_index=True)
+    
     
     source_path = f'./data/{protein}/{protein}_{ligand}_{model}/{protein}_{ligand}_{model}_prep_{pose}.pdb'
     #verify if the source file exists
     if not os.path.exists(source_path):
         print(f'File not found: {source_path}')
-        continue
+        continue                
 
     destination_path = f'./filtered_data/{description}.pdb'
     
     shutil.copy(source_path, destination_path)
 
 print(df_merged.sort_values('value', ascending=True).head(10))
+
+
+df_output.to_csv('./data/filtered_data.csv', index=False)                                                                                      
