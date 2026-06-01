@@ -1,4 +1,6 @@
-data/*
+input_docking/*
 filtered_data/*
-output/*
-tollbox/*
+outputs/*
+input_datasus/*
+cache_datasus/*
+__pycache__/*

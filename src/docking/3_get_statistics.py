@@ -1,8 +1,8 @@
 import pandas as pd
 
 
-df_data = pd.read_csv('data/filtered_data.csv')
-df_residues = pd.read_csv('data/ligand_residues.csv')
+df_data = pd.read_csv('outputs/filtered_data.csv')
+df_residues = pd.read_csv('outputs/ligand_residues.csv')
 
 # Calculate statistics
 

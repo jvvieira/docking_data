@@ -54,4 +54,4 @@ for file in files:
         }
         finaldata = pd.concat([finaldata, pd.DataFrame([new_data])], ignore_index=True)
 
-finaldata.to_csv('./data/ligand_residues.csv', index=False)
+finaldata.to_csv('./outputs/ligand_residues.csv', index=False)

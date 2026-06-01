@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 folders = ['DHFR','RAR','RXR','Ciclofilna']
 
 files_found = []
-for root, dirs, files in os.walk('./data/'):
+for root, dirs, files in os.walk('./input_docking/'):
     for name in files:
         if name.endswith('.sc'):
             files_found.append(os.path.join(root, name))
@@ -61,7 +61,7 @@ print(f'Number of binding cases: {len(df_merged)}')
 percentile_value = df_merged['value'].quantile(percentile)
 print(f'{100 - int(percentile * 100)}% percentile value: {percentile_value}')
 
-## Filter only lower then the mean
+## Filter only lower then the percentile value
 df_merged = df_merged[df_merged['value'] < percentile_value]
 print(f'Number of cases with value lower than the percentile: {len(df_merged)}')
 
@@ -121,4 +121,4 @@ for item in df_merged.itertuples():
 print(df_merged.sort_values('value', ascending=True).head(10))
 
 
-df_output.to_csv('./data/filtered_data.csv', index=False)                                                                                      
+df_output.to_csv('./outputs/filtered_data.csv', index=False)                                                                                      
