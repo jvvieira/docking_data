@@ -54,14 +54,7 @@ with ftplib.FTP(FTP_HOST) as ftp:
         #donwload only files that starts with PA and the year is greater than 2020
         if not filename.startswith(BASE) or filename[2:4] not in UF or filename[4:6] not in ANOS:
             continue
-        #regex to extract the year from the filename, it is in the format PAUFYYMM.dbc
-        # year_match = re.search(r"(\d{2})(\d{2})\.dbc", filename)
-        # if not year_match:
-        #     continue
-        # year = int(year_match.group(1))
-        # if year <= 20:
-        #     continue
-
+        
         local_path = OUTPUT_DIR / filename
         if not local_path.exists():
             print(f"Downloading {filename}...")

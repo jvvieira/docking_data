@@ -19,7 +19,7 @@ NEEDED_COLS = [
     # 'PA_CNPJMNT', 
     # 'PA_CNPJ_CC', 
     # 'PA_MVMR', 
-    # 'PA_CMPEF', 
+     'PA_CMPEF', 
     # 'PA_PROC_ID', 
     # 'PA_TPFIN', 
     # 'PA_SUBFIN', 
@@ -103,10 +103,14 @@ def process_file(dbc_file):
     # print(df[df["PA_CIDPRI"].str.contains(CID_PRIORITARIO, na=False)]["PA_CIDPRI"].value_counts())
 
     df_final = pd.DataFrame({
-        "PA_SEXO": df["PA_SEXO"],
-        "PA_IDADA": df["PA_IDADA"],
+        "PA_UFMUN": df["PA_UFMUN"],
+        "PA_CMPEF": df["PA_CMPEF"],
         "PA_CIDPRI": df["PA_CIDPRI"],
-        "PA_CMP": df["PA_CMP"]})
+        "PA_CIDSEC": df["PA_CIDSEC"],
+        "PA_CIDCAS": df["PA_CIDCAS"],
+        "PA_IDADE": df["PA_IDADE"],
+        "PA_SEXO": df["PA_SEXO"]
+    })
     
     df_final = df_final[df_final["PA_CIDPRI"].str.contains(CID_PRIORITARIO, na=False)]
     df_final.to_csv(f"./outputs/processed_{dbc_file.stem}.csv", index=False)
@@ -116,7 +120,7 @@ for dbc_file in sorted(INPUT_DIR.glob("*.dbc")):
     # Ignore if already processed
     output_file = Path(f"./outputs/processed_{dbc_file.stem}.csv")
     if output_file.exists():
-        print(f"Skipping {dbc_file.name} (already processed)")
+        # print(f"Skipping {dbc_file.name} (already processed)")
         continue
     print(f"Processing {dbc_file.name}...")
     process_file(dbc_file)

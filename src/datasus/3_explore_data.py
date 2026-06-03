@@ -83,9 +83,14 @@ if __name__ == "__main__":
 
     print("Columns:", peek_columns(file_to_process))
 
-    # Full load: streams to parquet first, then reads shards one at a time.
-    # For exploration only, set max_rows=10_000 to avoid high RAM use.
-    my_df = load_dataframe(file_to_process, max_rows=None)
+    # First run streams the .dbc to parquet shards (~2–3 min for SP files).
+    # Later runs reuse cache_datasus/parquet/<stem>/ automatically.
+    #
+    # Options to control memory:
+    #   columns=[...]  — only keep columns you need (smaller cache & DataFrame)
+    #   max_rows=N     — load only the first N rows
+    #   force=True     — rebuild parquet cache
+    my_df = load_dataframe(file_to_process)
 
     print(my_df.columns)
     print(my_df.head())
