@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 folders = ['DHFR','RAR','RXR','Ciclofilna']
 
 files_found = []
-for root, dirs, files in os.walk('./input_docking/'):
+for root, dirs, files in os.walk("./input_docking/"):
     for name in files:
         if name.endswith('.sc'):
             files_found.append(os.path.join(root, name))
@@ -53,22 +53,24 @@ df_merged = pd.concat([df_isc.loc[:, ['value','description']], df_delta_interfac
 print(f'Total number of cases (ISC + Delta Interface): {len(df_merged)}')
 
 
+df_merged['protein'] = df_merged['description'].apply(lambda x: x.split("_")[0])
+df_merged['ligand'] = df_merged['description'].apply(lambda x: x.split("_")[1])
+df_merged['model'] = df_merged['description'].apply(lambda x: x.split("_")[2])
+df_merged['pose'] = df_merged['description'].apply(lambda x: x.split("_")[4])
+df_merged['complex'] = df_merged['protein'] + '_' + df_merged['ligand']
+
 ## Filter non-binding cases (positive values)
 df_merged = df_merged[df_merged['value'] < 0]
-print(f'Number of binding cases: {len(df_merged)}')
+
+df_merged.to_csv('./outputs/all_docking_data.csv', index=False)                                                                                      
 
 
 percentile_value = df_merged['value'].quantile(percentile)
 print(f'{100 - int(percentile * 100)}% percentile value: {percentile_value}')
 
 ## Filter only lower then the percentile value
-df_merged = df_merged[df_merged['value'] < percentile_value]
+df_merged = df_merged[df_merged['value'] < percentile_value ]
 print(f'Number of cases with value lower than the percentile: {len(df_merged)}')
-
-df_merged['protein'] = df_merged['description'].apply(lambda x: x.split("_")[0])
-df_merged['ligand'] = df_merged['description'].apply(lambda x: x.split("_")[1])
-df_merged['model'] = df_merged['description'].apply(lambda x: x.split("_")[2])
-df_merged['pose'] = df_merged['description'].apply(lambda x: x.split("_")[4])
 
 ## Best Comples 1
 best_complex1 = df_merged.groupby('protein').count()
@@ -108,17 +110,17 @@ for item in df_merged.itertuples():
     df_output = pd.concat([df_output, pd.DataFrame([new_row])], ignore_index=True)
     
     
-    source_path = f'./data/{protein}/{protein}_{ligand}_{model}/{protein}_{ligand}_{model}_prep_{pose}.pdb'
+    source_path = f'./input_docking/{protein}/{protein}_{ligand}_{model}/{protein}_{ligand}_{model}_prep_{pose}.pdb'
     #verify if the source file exists
     if not os.path.exists(source_path):
-        print(f'File not found: {source_path}')
+        # print(f'File not found: {source_path}')
         continue                
 
     destination_path = f'./filtered_data/{description}.pdb'
     
     shutil.copy(source_path, destination_path)
 
-print(df_merged.sort_values('value', ascending=True).head(10))
+print(df_merged.groupby(['complex']).count().sort_values('value', ascending=False))
 
 
 df_output.to_csv('./outputs/filtered_data.csv', index=False)                                                                                      
